@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.antigravity" "\0"
+            VALUE "CompanyName", "com.vedica.labs" "\0"
             VALUE "FileDescription", "calcpro_ultra" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "calcpro_ultra" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.antigravity. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 com.vedica.labs. All rights reserved." "\0"
             VALUE "OriginalFilename", "calcpro_ultra.exe" "\0"
             VALUE "ProductName", "calcpro_ultra" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

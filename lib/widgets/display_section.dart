@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/calculator_provider.dart';
+import '../providers/theme_provider.dart';
 
 class DisplaySection extends StatelessWidget {
   const DisplaySection({super.key});
@@ -11,7 +12,8 @@ class DisplaySection extends StatelessWidget {
     if (text.isEmpty || text == " ") return;
     
     Clipboard.setData(ClipboardData(text: text));
-    HapticFeedback.lightImpact();
+    final theme = context.read<ThemeProvider>();
+    if (theme.hapticFeedback) HapticFeedback.lightImpact();
     
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -33,7 +35,7 @@ class DisplaySection extends StatelessWidget {
     final onSurfaceVariant = Theme.of(context).colorScheme.onSurfaceVariant;
 
     return Expanded(
-      flex: 3,
+      flex: 30,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -68,9 +70,9 @@ class DisplaySection extends StatelessWidget {
               onLongPress: () => _copyToClipboard(context, calc.result),
               child: Align(
                 alignment: Alignment.centerRight,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  reverse: true,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
                   child: Text(
                     calc.result,
                     style: GoogleFonts.spaceGrotesk(

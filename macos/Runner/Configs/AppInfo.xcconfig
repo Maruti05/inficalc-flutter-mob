@@ -8,7 +8,7 @@
 PRODUCT_NAME = calcpro_ultra
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.antigravity.calcproUltra
+PRODUCT_BUNDLE_IDENTIFIER = com.vedica.labs.ind.app.inficalc
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 com.antigravity. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 com.vedica.labs. All rights reserved.

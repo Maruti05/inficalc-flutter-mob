@@ -5,10 +5,37 @@ import 'package:provider/provider.dart';
 import '../providers/calculator_provider.dart';
 import '../providers/theme_provider.dart';
 
-class CalculatorButton extends StatelessWidget {
+class CalculatorButton extends StatefulWidget {
   final String label;
   final bool isScientific;
   const CalculatorButton({super.key, required this.label, this.isScientific = false});
+
+  @override
+  State<CalculatorButton> createState() => _CalculatorButtonState();
+}
+
+class _CalculatorButtonState extends State<CalculatorButton> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+      lowerBound: 0.94,
+      upperBound: 1.0,
+      value: 1.0,
+    );
+    _scaleAnimation = _controller;
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +53,19 @@ class CalculatorButton extends StatelessWidget {
     Color textColor;
 
     // Categorize button types for styling
-    final isOperator = ['+', '-', 'x', '/', '%'].contains(label);
+    final isOperator = ['+', '-', 'x', '/', '%'].contains(widget.label);
     final isFunction = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 
-                        'log', 'ln', '√', 'abs', 'x²', 'xⁿ', 'n!'].contains(label);
-    final isConstant = ['π', 'e', 'φ', '√2', 'ln2', 'log2e'].contains(label);
-    final isNumber = RegExp(r'^[0-9.]$').hasMatch(label);
+                        'log', 'ln', '√', 'abs', 'x²', 'xⁿ', 'n!'].contains(widget.label);
+    final isConstant = ['π', 'e', 'φ', '√2', 'ln2', 'log2e'].contains(widget.label);
+    final isNumber = RegExp(r'^[0-9.]+$').hasMatch(widget.label);
 
-    if (label == 'AC') {
+    if (widget.label == 'AC') {
       bgColor = acRed;
       textColor = Colors.white;
-    } else if (label == 'C') {
+    } else if (widget.label == 'C') {
       bgColor = acRed.withOpacity(0.15);
       textColor = acRed;
-    } else if (label == '=') {
+    } else if (widget.label == '=') {
       bgColor = equalsBlue.withOpacity(0.9);
       textColor = Colors.white;
     } else if (isOperator) {
@@ -59,45 +86,47 @@ class CalculatorButton extends StatelessWidget {
     }
 
     final width = MediaQuery.of(context).size.width;
-    double fontSize = isScientific ? 14 : 20;
+    double fontSize = widget.isScientific ? 14 : 22;
     if (width < 360) fontSize -= 2;
-    // Constants with long names get smaller font
-    if (['log2e', 'asin', 'acos', 'atan'].contains(label)) fontSize = 12;
+    if (['log2e', 'asin', 'acos', 'atan'].contains(widget.label)) fontSize = 12;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          HapticFeedback.lightImpact();
-          final precision = context.read<ThemeProvider>().decimalPrecision;
-          if (label == 'AC') {
-            calc.clear();
-          } else if (label == 'C') {
-            calc.delete();
-          } else if (label == '=') {
-            calc.calculate(precision);
-          } else {
-            calc.append(label);
-          }
-        },
-        borderRadius: BorderRadius.circular(14),
+    return GestureDetector(
+      onTapDown: (_) => _controller.reverse(),
+      onTapUp: (_) => _controller.forward(),
+      onTapCancel: () => _controller.forward(),
+      onTap: () {
+        final theme = context.read<ThemeProvider>();
+        if (theme.hapticFeedback) HapticFeedback.lightImpact();
+        final precision = theme.decimalPrecision;
+        if (widget.label == 'AC') {
+          calc.clear();
+        } else if (widget.label == 'C') {
+          calc.delete();
+        } else if (widget.label == '=') {
+          calc.calculate(precision);
+        } else {
+          calc.append(widget.label);
+        }
+      },
+      child: ScaleTransition(
+        scale: _scaleAnimation,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: label == '=' ? [
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: widget.label == '=' ? [
               BoxShadow(
-                color: equalsBlue.withOpacity(0.3),
-                blurRadius: 12,
+                color: equalsBlue.withOpacity(0.35),
+                blurRadius: 15,
                 spreadRadius: 1,
-                offset: const Offset(0, 3),
+                offset: const Offset(0, 4),
               )
             ] : null,
           ),
           alignment: Alignment.center,
           child: Text(
-            label,
+            widget.label,
             style: GoogleFonts.spaceGrotesk(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,

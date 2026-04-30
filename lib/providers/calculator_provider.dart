@@ -1,11 +1,10 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 class CalculatorProvider with ChangeNotifier {
   String _expression = "";
   String _result = "0";
-  List<String> _history = [];
+  final List<String> _history = [];
 
   String get expression => _expression;
   String get result => _result;
@@ -19,9 +18,9 @@ class CalculatorProvider with ChangeNotifier {
   void append(String text) {
     if (_expression.isEmpty && "/*+x".contains(text)) {
       if (_result != "Error" && _result != "0") {
-         _expression = _result + text;
+        _expression = _result + text;
       } else {
-         return; // Don't start with operator unless result is available
+        return; // Don't start with operator unless result is available
       }
     } else {
       // --- TRIG functions ---
@@ -72,9 +71,6 @@ class CalculatorProvider with ChangeNotifier {
         } else if (_expression.isNotEmpty) {
           _expression = "-$_expression";
         }
-      } else if (text == 'Rand') {
-        final random = math.Random();
-        _expression += random.nextDouble().toStringAsFixed(6);
       } else if (text == '%') {
         _expression += "%";
       } else {
@@ -93,11 +89,25 @@ class CalculatorProvider with ChangeNotifier {
   void delete() {
     if (_expression.isNotEmpty) {
       // Smart delete: remove whole function names (sin, cos, etc.) not just one char
-      final funcPatterns = ['asin(', 'acos(', 'atan(', 'sin(', 'cos(', 'tan(', 'log(', 'abs(', 'ln(', '√('];
+      final funcPatterns = [
+        'asin(',
+        'acos(',
+        'atan(',
+        'sin(',
+        'cos(',
+        'tan(',
+        'log(',
+        'abs(',
+        'ln(',
+        '√(',
+      ];
       bool removedFunc = false;
       for (final func in funcPatterns) {
         if (_expression.endsWith(func)) {
-          _expression = _expression.substring(0, _expression.length - func.length);
+          _expression = _expression.substring(
+            0,
+            _expression.length - func.length,
+          );
           removedFunc = true;
           break;
         }
@@ -112,7 +122,7 @@ class CalculatorProvider with ChangeNotifier {
   void calculate(int precision) {
     try {
       if (_expression.isEmpty) return;
-      
+
       // Expression cleaning for the math_expressions parser
       String cleanedExpression = _expression
           .replaceAll('x', '*')
@@ -124,7 +134,7 @@ class CalculatorProvider with ChangeNotifier {
         RegExp(r'(\d+\.?\d*)%'),
         (match) => '(${match.group(1)}/100)',
       );
-      
+
       // Auto-close missing braces for user convenience
       int openBraces = '('.allMatches(cleanedExpression).length;
       int closeBraces = ')'.allMatches(cleanedExpression).length;
@@ -136,7 +146,7 @@ class CalculatorProvider with ChangeNotifier {
       Expression exp = p.parse(cleanedExpression);
       ContextModel cm = ContextModel();
       double eval = exp.evaluate(EvaluationType.REAL, cm);
-      
+
       // Handle special float values
       if (eval.isInfinite) {
         _result = "∞";
@@ -150,7 +160,7 @@ class CalculatorProvider with ChangeNotifier {
       }
 
       _result = eval.toStringAsFixed(precision);
-      
+
       // Clean up result: remove trailing zeros and decimal point if unnecessary
       if (_result.contains('.')) {
         _result = _result.replaceAll(RegExp(r'0*$'), '');
@@ -158,7 +168,7 @@ class CalculatorProvider with ChangeNotifier {
           _result = _result.substring(0, _result.length - 1);
         }
       }
-      
+
       _history.insert(0, "$_expression = $_result");
       _expression = "";
       notifyListeners();

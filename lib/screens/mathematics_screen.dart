@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/science_provider.dart';
 import '../providers/theme_provider.dart';
+import '../widgets/formula_info_card.dart';
 
 class MathematicsScreen extends StatelessWidget {
   const MathematicsScreen({super.key});
@@ -74,9 +75,17 @@ class MathematicsScreen extends StatelessWidget {
                       onChanged: (val) => science.updateInput(index + 1, val, theme.decimalPrecision),
                       decoration: InputDecoration(
                         labelText: label,
-                        labelStyle: GoogleFonts.inter(fontSize: 12, color: primary.withValues(alpha: 0.5)),
-                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: primary.withValues(alpha: 0.1))),
-                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: primary)),
+                        labelStyle: GoogleFonts.inter(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: primary, width: 2),
+                        ),
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
                       ),
                     ),
                   );
@@ -114,6 +123,13 @@ class MathematicsScreen extends StatelessWidget {
                 ],
               ),
             ),
+
+            // Formula Info Card
+            if (science.currentFormula.info != null)
+              FormulaInfoCard(
+                info: science.currentFormula.info!,
+                primaryColor: primary,
+              ),
           ],
         ),
       ),

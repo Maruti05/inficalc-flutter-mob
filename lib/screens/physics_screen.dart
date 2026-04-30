@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/science_provider.dart';
 import '../providers/theme_provider.dart';
+import '../widgets/formula_info_card.dart';
 
 class PhysicsScreen extends StatelessWidget {
   const PhysicsScreen({super.key});
@@ -74,9 +75,17 @@ class PhysicsScreen extends StatelessWidget {
                       onChanged: (val) => science.updateInput(index + 1, val, theme.decimalPrecision),
                       decoration: InputDecoration(
                         labelText: label,
-                        labelStyle: GoogleFonts.inter(fontSize: 12, color: primary.withValues(alpha: 0.5)),
-                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: primary.withValues(alpha: 0.1))),
-                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: primary)),
+                        labelStyle: GoogleFonts.inter(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: primary, width: 2),
+                        ),
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
                       ),
                     ),
                   );
@@ -107,13 +116,23 @@ class PhysicsScreen extends StatelessWidget {
                     style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 4, color: Colors.white.withValues(alpha: 0.9)),
                   ),
                   const SizedBox(height: 12),
-                  Text(
-                    science.result,
-                    style: GoogleFonts.spaceGrotesk(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      science.result,
+                      style: GoogleFonts.spaceGrotesk(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
                   ),
                 ],
               ),
             ),
+
+            // Formula Info Card
+            if (science.currentFormula.info != null)
+              FormulaInfoCard(
+                info: science.currentFormula.info!,
+                primaryColor: primary,
+              ),
           ],
         ),
       ),

@@ -75,7 +75,8 @@ class _CalculatorHomeState extends State<CalculatorHome> {
 
       if (_speechAvailable) {
         setState(() => _isListening = true);
-        HapticFeedback.heavyImpact();
+        final theme = context.read<ThemeProvider>();
+        if (theme.hapticFeedback) HapticFeedback.heavyImpact();
         _showSnackBar("LISTENING...", isPersistent: true);
 
         _speech.listen(
@@ -107,9 +108,10 @@ class _CalculatorHomeState extends State<CalculatorHome> {
 
     final calc = context.read<CalculatorProvider>();
     final theme = context.read<ThemeProvider>();
-    
+
     // Advanced parsing: convert spoken words to math operators
-    String expression = input.toLowerCase()
+    String expression = input
+        .toLowerCase()
         .replaceAll('plus', '+')
         .replaceAll('add', '+')
         .replaceAll('minus', '-')
@@ -134,7 +136,7 @@ class _CalculatorHomeState extends State<CalculatorHome> {
     if (expression.isNotEmpty) {
       calc.setExpression(expression);
       calc.calculate(theme.decimalPrecision);
-      HapticFeedback.lightImpact();
+      if (theme.hapticFeedback) HapticFeedback.lightImpact();
       _showSnackBar("HEARD: $expression");
     } else {
       _showSnackBar("Couldn't parse: \"$input\"");
@@ -159,30 +161,37 @@ class _CalculatorHomeState extends State<CalculatorHome> {
               const SizedBox(width: 10),
             ],
             Expanded(
-              child: Text(text, style: GoogleFonts.inter(
-                fontWeight: FontWeight.bold, 
-                fontSize: 12,
-                color: isDark ? Colors.white : Colors.black87,
-              )),
+              child: Text(
+                text,
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
             ),
           ],
         ),
         behavior: SnackBarBehavior.floating,
-        duration: isPersistent ? const Duration(seconds: 15) : const Duration(seconds: 2),
-        backgroundColor: isDark 
-            ? Theme.of(context).colorScheme.surfaceContainerHigh 
+        duration: isPersistent
+            ? const Duration(seconds: 15)
+            : const Duration(seconds: 2),
+        backgroundColor: isDark
+            ? Theme.of(context).colorScheme.surfaceContainerHigh
             : Colors.white,
         elevation: 8,
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        action: isPersistent ? SnackBarAction(
-          label: 'STOP',
-          textColor: Colors.redAccent,
-          onPressed: () {
-            setState(() => _isListening = false);
-            _speech.stop();
-          },
-        ) : null,
+        action: isPersistent
+            ? SnackBarAction(
+                label: 'STOP',
+                textColor: Colors.redAccent,
+                onPressed: () {
+                  setState(() => _isListening = false);
+                  _speech.stop();
+                },
+              )
+            : null,
       ),
     );
   }
@@ -193,16 +202,19 @@ class _CalculatorHomeState extends State<CalculatorHome> {
       appBar: AppBar(
         centerTitle: false,
         titleSpacing: 20,
-        title: Text(_isScientific ? 'SCIENTIFIC' : 'INFICALC'),
+        title: Text(_isScientific ? 'Scientific' : 'InfiCalc'),
         actions: [
           IconButton(
             icon: Icon(_isScientific ? Icons.calculate : Icons.science),
-            onPressed: () => setState(() => _isScientific = !_isScientific),
+            onPressed: () {
+              context.read<CalculatorProvider>().clear();
+              setState(() => _isScientific = !_isScientific);
+            },
             tooltip: 'Toggle Scientific Mode',
           ),
           IconButton(
             icon: Icon(
-              _isListening ? Icons.mic : Icons.mic_none, 
+              _isListening ? Icons.mic : Icons.mic_none,
               color: _isListening ? Colors.redAccent : null,
             ),
             onPressed: _listen,

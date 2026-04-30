@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/science_provider.dart';
 import '../providers/theme_provider.dart';
+import '../widgets/formula_info_card.dart';
 
 class ChemistryScreen extends StatelessWidget {
   const ChemistryScreen({super.key});
@@ -72,11 +73,19 @@ class ChemistryScreen extends StatelessWidget {
                       keyboardType: TextInputType.number,
                       style: GoogleFonts.robotoMono(color: onSurface),
                       onChanged: (val) => science.updateInput(index + 1, val, theme.decimalPrecision),
-                        decoration: InputDecoration(
+                      decoration: InputDecoration(
                         labelText: label,
-                        labelStyle: GoogleFonts.inter(fontSize: 12, color: primary.withOpacity(0.5)),
-                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: primary.withOpacity(0.1))),
-                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: primary)),
+                        labelStyle: GoogleFonts.inter(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: primary, width: 2),
+                        ),
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
                       ),
                     ),
                   );
@@ -114,6 +123,13 @@ class ChemistryScreen extends StatelessWidget {
                 ],
               ),
             ),
+
+            // Formula Info Card
+            if (science.currentFormula.info != null)
+              FormulaInfoCard(
+                info: science.currentFormula.info!,
+                primaryColor: primary,
+              ),
           ],
         ),
       ),

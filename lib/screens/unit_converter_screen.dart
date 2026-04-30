@@ -24,34 +24,50 @@ class UnitConverterScreen extends StatelessWidget {
             children: [
               // Category Selector (Chips)
               SizedBox(
-                height: constraints.maxHeight * 0.12 > 80 ? 80 : constraints.maxHeight * 0.12,
+                height: 80,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   children: converter.categories.keys.map((cat) {
                     bool isSelected = cat == converter.currentCategory;
+                    
+                    final Map<String, IconData> categoryIcons = {
+                      "LENGTH": Icons.straighten,
+                      "MASS": Icons.scale,
+                      "SPEED": Icons.speed,
+                      "TIME": Icons.access_time,
+                      "VOLUME": Icons.opacity,
+                      "TEMPERATURE": Icons.thermostat,
+                      "AREA": Icons.layers,
+                      "DATA": Icons.data_usage,
+                      "PRESSURE": Icons.compress,
+                      "ENERGY": Icons.bolt,
+                    };
+
                     return Padding(
                       padding: const EdgeInsets.only(right: 12),
                       child: ChoiceChip(
-                        label: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Text(cat),
+                        avatar: Icon(
+                          categoryIcons[cat] ?? Icons.category, 
+                          size: 16, 
+                          color: isSelected ? primary : onSurfaceVariant,
                         ),
+                        label: Text(cat),
                         selected: isSelected,
                         onSelected: (_) => converter.updateCategory(cat),
                         showCheckmark: false,
-                        selectedColor: primary.withOpacity(0.2),
+                        selectedColor: primary.withOpacity(0.15),
                         backgroundColor: Theme.of(context).brightness == Brightness.dark 
                           ? Colors.white.withOpacity(0.05) 
                           : Colors.black.withOpacity(0.05),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
-                            side: BorderSide(
-                            color: isSelected ? primary : onSurfaceVariant.withOpacity(0.2),
+                          side: BorderSide(
+                            color: isSelected ? primary : onSurfaceVariant.withOpacity(0.15),
                           ),
                         ),
                         labelStyle: GoogleFonts.inter(
-                          fontSize: constraints.maxWidth < 360 ? 11 : 13,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: isSelected ? primary : onSurfaceVariant,
                         ),
@@ -82,14 +98,12 @@ class UnitConverterScreen extends StatelessWidget {
                     
                     _buildConverterDisplay(context, converter.outputVal, converter.toUnit, false),
                     
-                    const SizedBox(height: 8),
+                    const Spacer(),
                     
-                    // Keypad fills remaining space
-                    Expanded(
-                      child: _buildConverterKeypad(context, converter, theme.decimalPrecision, constraints),
-                    ),
+                    // Keypad positioned at the bottom
+                    _buildConverterKeypad(context, converter, theme.decimalPrecision, constraints),
                     
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),
@@ -100,7 +114,9 @@ class UnitConverterScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildConverterDisplay(BuildContext context, String val, String unit, bool isInput) {
+  Widget _buildConverterDisplay(BuildContext context, String val, String currentUnit, bool isInput) {
+    final converter = context.read<ConverterProvider>();
+    final theme = context.read<ThemeProvider>();
     final primary = Theme.of(context).colorScheme.primary;
     final onSurface = Theme.of(context).colorScheme.onSurface;
     final onSurfaceVariant = Theme.of(context).colorScheme.onSurfaceVariant;
@@ -109,7 +125,7 @@ class UnitConverterScreen extends StatelessWidget {
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
+      decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerLowest.withOpacity(0.5),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: isInput ? primary.withOpacity(0.3) : onSurfaceVariant.withOpacity(0.1)),
@@ -117,7 +133,7 @@ class UnitConverterScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Label + Unit
+          // Label + Unit Dropdown
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -129,24 +145,52 @@ class UnitConverterScreen extends StatelessWidget {
                   fontWeight: FontWeight.w800,
                   color: isInput ? primary : onSurfaceVariant.withOpacity(0.7),
                 )),
-              const SizedBox(height: 2),
-              Text(unit, style: GoogleFonts.inter(
-                fontSize: 12, 
-                color: onSurfaceVariant,
-                fontWeight: FontWeight.w500,
-              )),
+              // UNIT DROPDOWN
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: currentUnit,
+                  isDense: true,
+                  icon: Icon(Icons.arrow_drop_down, color: isInput ? primary : onSurfaceVariant, size: 18),
+                  dropdownColor: Theme.of(context).colorScheme.surfaceContainer,
+                  borderRadius: BorderRadius.circular(16),
+                  style: GoogleFonts.inter(
+                    fontSize: 13, 
+                    color: onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      if (isInput) {
+                        converter.updateUnits(newValue, converter.toUnit, theme.decimalPrecision);
+                      } else {
+                        converter.updateUnits(converter.fromUnit, newValue, theme.decimalPrecision);
+                      }
+                    }
+                  },
+                  items: converter.categories[converter.currentCategory]!
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ),
             ],
           ),
           const Spacer(),
           // Value
           Flexible(
-            child: Text(val, 
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 28, 
-                fontWeight: FontWeight.bold,
-                color: isInput ? onSurface : const Color(0xFF4DB6AC),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerRight,
+              child: Text(val, 
+                textAlign: TextAlign.end,
+                style: GoogleFonts.spaceGrotesk(
+                  fontSize: 28, 
+                  fontWeight: FontWeight.bold,
+                  color: isInput ? onSurface : const Color(0xFF4DB6AC),
+                ),
               ),
             ),
           ),
@@ -160,6 +204,7 @@ class UnitConverterScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.04),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           _buildKeypadRow(context, ["7", "8", "9"], converter, precision),
           _buildKeypadRow(context, ["4", "5", "6"], converter, precision),

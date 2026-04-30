@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../core/theme.dart';
+import '../providers/science_provider.dart';
 import '../services/update_service.dart';
 import '../widgets/update_dialog.dart';
 import 'calculator_home.dart';
@@ -53,6 +55,15 @@ class _MainEntryScreenState extends State<MainEntryScreen> {
   }
 
   void _onItemTapped(int index) {
+    // Reset science provider when switching to Math, Physics, or Chemistry tabs
+    if (index == 1) {
+      context.read<ScienceProvider>().resetForCategory("MATH");
+    } else if (index == 2) {
+      context.read<ScienceProvider>().resetForCategory("PHYSICS");
+    } else if (index == 3) {
+      context.read<ScienceProvider>().resetForCategory("CHEMISTRY");
+    }
+    
     _pageController.animateToPage(
       index,
       duration: const Duration(milliseconds: 300),

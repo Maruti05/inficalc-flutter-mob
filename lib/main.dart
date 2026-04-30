@@ -12,7 +12,10 @@ import 'screens/main_entry_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Lock orientation to portrait only to preserve 'Cosmic Precision' layout
+  // Set edge-to-edge mode for Android to allow content to flow under system bars
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  // Lock orientation to portrait only
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -39,14 +42,18 @@ class InfiCalcApp extends StatelessWidget {
     final themeProvider = context.watch<ThemeProvider>();
     final isDark = themeProvider.isDarkMode;
 
+    // Use a more robust SystemUiOverlayStyle definition
+    final systemUiOverlayStyle = SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+      statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+      systemNavigationBarDividerColor: Colors.transparent,
+    );
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-      ),
+      value: systemUiOverlayStyle,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'InfiCalc',

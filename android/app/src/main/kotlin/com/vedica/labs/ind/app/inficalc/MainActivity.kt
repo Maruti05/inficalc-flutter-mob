@@ -1,4 +1,4 @@
-package com.vedica.labs.inficalc
+package com.vedica.labs.ind.app.inficalc
 
 import io.flutter.embedding.android.FlutterActivity
 

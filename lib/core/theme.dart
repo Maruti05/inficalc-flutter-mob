@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/theme_provider.dart';
 
@@ -121,6 +122,11 @@ class CosmicTheme {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+        ),
         titleTextStyle: GoogleFonts.spaceGrotesk(
           fontSize: 20,
           fontWeight: FontWeight.bold,
