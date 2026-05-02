@@ -37,33 +37,39 @@ void main() async {
 class InfiCalcApp extends StatelessWidget {
   const InfiCalcApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
-    final isDark = themeProvider.isDarkMode;
+ @override
+Widget build(BuildContext context) {
+  final mode = context.select((ThemeProvider p) => p.interfaceMode);
+  final palette = context.select((ThemeProvider p) => p.palette);
 
-    // Use a more robust SystemUiOverlayStyle definition
-    final systemUiOverlayStyle = SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-      statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-      systemNavigationBarDividerColor: Colors.transparent,
-    );
+  final brightness = MediaQuery.platformBrightnessOf(context);
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: systemUiOverlayStyle,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'InfiCalc',
-        theme: CosmicTheme.getTheme(isDark, themeProvider.palette),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const SplashScreen(),
-          '/main': (context) => const MainEntryScreen(),
-        },
-      ),
-    );
-  }
+  final isDark = mode == InterfaceMode.auto
+      ? brightness == Brightness.dark
+      : mode == InterfaceMode.dark;
+
+  final systemUiOverlayStyle = SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+    statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarIconBrightness:
+        isDark ? Brightness.light : Brightness.dark,
+    systemNavigationBarDividerColor: Colors.transparent,
+  );
+
+  return AnnotatedRegion<SystemUiOverlayStyle>(
+    value: systemUiOverlayStyle,
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'InfiCalc',
+      theme: CosmicTheme.getTheme(isDark, palette),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const SplashScreen(),
+        '/main': (context) => const MainEntryScreen(),
+      },
+    ),
+  );
+}
 }
