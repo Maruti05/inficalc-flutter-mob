@@ -380,7 +380,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Text('v$version', style: GoogleFonts.inter(fontSize: 10)),
           const SizedBox(height: 8),
           Text(
-            '© 2026 COSMIC LABS',
+            '© ${DateTime.now().year} VEDICA LABS',
             style: GoogleFonts.inter(
               fontSize: 9,
               color: colors.onSurfaceVariant.withOpacity(0.5),
