@@ -1,166 +1,336 @@
-# InfiCalc
+<div align="center">
 
-A premium scientific calculator app built with Flutter and designed for Android, iOS, web, Windows, macOS, and Linux.
+# ⚡ INFICALC
 
-## Project Overview
+### *The Infinity Scientific Calculator*
 
-InfiCalc is a feature-rich calculator app that combines standard and scientific calculation, unit conversion, physics/chemistry/mathematics formulas, voice input, theme customization, and update management.
+**超越极限 · 無限の計算 · 무한 계산**
 
-This app uses Flutter with a provider-based architecture and local persistence for settings.
+[![Flutter](https://img.shields.io/badge/Flutter-3.11+-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.11+-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
+[![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Windows%20%7C%20macOS%20%7C%20Linux-6C5CE7?style=for-the-badge)](#)
+[![License](https://img.shields.io/badge/License-Proprietary-FF6B6B?style=for-the-badge)](#)
+[![Version](https://img.shields.io/badge/Version-1.1.3+-00D2D3?style=for-the-badge)](pubspec.yaml)
 
-## Key Features
-
-- Standard and scientific calculator modes
-- Voice command input with speech recognition
-- Calculation history
-- Unit converter with categories including length, mass, speed, time, volume, temperature, area, data, pressure, and energy
-- Physics, chemistry, and mathematics formula calculators with metadata and safe evaluation
-- Theme palette selection and interface mode switching (light, dark, auto)
-- Decimal precision control
-- Trigonometric angle base switching (degrees/radians)
-- Haptic feedback toggle
-- App version display using `package_info_plus`
-- Android in-app update support using `in_app_update`
-- Persistent user settings via `shared_preferences`
-- Responsive custom UI with Google Fonts styling
-
-## Architecture
-
-The app follows a clear separation between UI, state management, data, and service layers.
-
-- `lib/main.dart` initializes the app, locks portrait orientation, and sets up providers.
-- `lib/providers/` contains app state controllers for theme, calculator, converter, and science modules.
-- `lib/core/theme.dart` defines the app's color palettes and theme generation logic.
-- `lib/screens/` contains the visible screens and navigation logic.
-- `lib/widgets/` contains reusable UI components such as the calculator display, keypad section, update dialog, and screen wrapper.
-- `lib/data/formulas.dart` defines the domain model for formula evaluation, metadata, and error-safe calculations.
-- `lib/services/update_service.dart` handles Android Play Store update checks.
-
-## Folder Structure
+<br>
 
 ```
-lib/
-  main.dart
-  core/
-    theme.dart
-  data/
-    formulas.dart
-  providers/
-    calculator_provider.dart
-    converter_provider.dart
-    science_provider.dart
-    theme_provider.dart
-  screens/
-    about_screen.dart
-    calculator_home.dart
-    chemistry_screen.dart
-    history_screen.dart
-    main_entry_screen.dart
-    mathematics_screen.dart
-    physics_screen.dart
-    privacy_policy_screen.dart
-    settings_screen.dart
-    splash_screen.dart
-    unit_converter_screen.dart
-  services/
-    update_service.dart
-  widgets/
-    display_section.dart
-    keypad_section.dart
-    mode_screen_wrapper.dart
-    update_dialog.dart
-assets/
-  images/
-    app_icon.png
+   ╔══════════════════════════════════════╗
+   ║   ██╗███╗   ██╗███████╗██╗ ██████╗ ║
+   ║   ██║████╗  ██║██╔════╝██║██╔════╝ ║
+   ║   ██║██╔██╗ ██║█████╗  ██║██║      ║
+   ║   ██║██║╚██╗██║██╔══╝  ██║██║      ║
+   ║   ██║██║ ╚████║██║     ██║╚██████╗ ║
+   ║   ╚═╝╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝ ║
+   ║        ██████╗ █████╗ ██╗            ║
+   ║        ██╔══██╗██╔══██╗██║            ║
+   ║        ██████╔╝███████║██║            ║
+   ║        ██╔══██╗██╔══██║██║            ║
+   ║        ██║  ██║██║  ██║███████╗       ║
+   ║        ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝       ║
+   ╚══════════════════════════════════════╝
 ```
 
-## Implementation Details
+</div>
 
-### App Initialization
+---
 
-- `main.dart` calls `WidgetsFlutterBinding.ensureInitialized()`.
-- System UI mode is set to `edgeToEdge`.
-- Orientation is locked to portrait up/down.
-- `MultiProvider` registers `CalculatorProvider`, `ThemeProvider`, `ConverterProvider`, and `ScienceProvider`.
-- `InfiCalcApp` chooses the correct theme based on user preference and system brightness.
+## 🌌 OVERVIEW
 
-### Theme and Settings
+**InfiCalc** is a next-generation, cross-platform scientific calculator engineered for the modern era. It fuses advanced mathematical computation, real-time voice synthesis, multi-category unit conversion, and a deep library of physics, chemistry, and mathematics formulas — all wrapped in a cybernetic UI with adaptive theming.
 
-- `ThemeProvider` stores palette, interface mode, decimal precision, trig base, notation, haptics, click sounds, and history auto-save.
-- Settings are persisted with `SharedPreferences`.
-- `settings_screen.dart` exposes UI controls for palette, interface mode, precision, trig base, haptics, and privacy policy.
-- `PackageInfo.fromPlatform()` is used to show the current version/build.
+> _"Not just a calculator — a computational companion."_
 
-### Calculator Engine
+---
 
-- `CalculatorProvider` tracks the input expression, result, and history.
-- It supports expression building, scientific operations, functions, constants, smart delete, and percentage handling.
-- Calculations use `math_expressions` for parsing and evaluation.
-- Result formatting removes trailing zeros and supports infinity/NaN handling.
+## ✨ QUANTUM FEATURES
 
-### Voice Commands
+### 🔢 Computation Engine
+- **Dual-Mode Calculator** — Standard & Scientific with full expression parsing
+- **Math Expression Parser** — Powered by `math_expressions` with safe evaluation
+- **Smart Result Formatting** — Auto-truncation of trailing zeros, infinity/NaN handling
+- **Trigonometric Flexibility** — Degrees / Radians angle base switching
+- **Precision Control** — Configurable decimal precision
 
-- `calculator_home.dart` integrates `speech_to_text` and `permission_handler`.
-- The voice button requests microphone permission, listens for speech, and converts spoken phrases into a calculator expression.
-- Spoken words like "plus", "minus", "times", "divided by", and "point" are mapped to math symbols.
-- Parsed voice expressions are calculated immediately.
+### 🎙️ Voice Synthesis
+- **Speech-to-Expression** — Converts natural language ("plus", "times", "divided by") into math symbols
+- **Real-time Recognition** — Powered by `speech_to_text` with permission handling
+- **Instant Calculation** — Voice input evaluated immediately
 
-### Unit Conversion
+### 🔄 Unit Conversion Matrix
+| Category     | Categories Covered                          |
+|-------------|---------------------------------------------|
+| 📏 Length   | mm, cm, m, km, in, ft, yd, mi               |
+| ⚖️ Mass      | mg, g, kg, oz, lb, ton                      |
+| 💨 Speed     | m/s, km/h, mph, knot                        |
+| ⏱️ Time      | ms, s, min, hr, day, week, month, year      |
+| 📐 Volume    | mL, L, gal, qt, pt, cup, fl oz              |
+| 🌡️ Temperature | Celsius, Fahrenheit, Kelvin               |
+| 🟦 Area      | mm², cm², m², ha, km², in², ft², ac, mi²   |
+| 💾 Data      | B, KB, MB, GB, TB, PB                       |
+| 🔄 Pressure  | Pa, kPa, MPa, bar, psi, atm, torr           |
+| ⚡ Energy     | J, kJ, cal, kcal, Wh, kWh, eV               |
 
-- `ConverterProvider` manages unit conversion state and category selection.
-- Supported categories include length, mass, speed, time, volume, temperature, area, data, pressure, and energy.
-- Conversion logic is implemented with factor maps and precision-safe result formatting.
+### 🧬 Science Formula Vault
+- **Physics** — Kinematics, dynamics, energy, waves, electromagnetism
+- **Chemistry** — Stoichiometry, gas laws, thermodynamics, atomic structure
+- **Mathematics** — Algebra, geometry, trigonometry, calculus, statistics
+- **Metadata-Rich** — Each formula includes descriptions, variables, and validation
+- **Error-Safe** — Sandboxed evaluation with graceful failure
 
-### Science Formula Engine
+### 🎨 Cybernetic UI
+- **3 Palette Presets** — Iconic (Blue/Teal), Slate (Steel/Purple), Nebula (Violet/Pink)
+- **Adaptive Interface** — Light / Dark / Auto mode
+- **Space Grotesk & Inter Typography** — Futuristic type hierarchy
+- **Haptic Feedback** — Tactile response toggle
+- **System-Wide Edge-to-Edge** — Immersive display on supported devices
 
-- `ScienceProvider` exposes formula categories and handles formula selection.
-- `formulas.dart` defines `Formula`, `FormulaResult`, `FormulaInfo`, `FormulaVariable`, and safe math helpers.
-- The app includes physics, chemistry, and mathematics formulas with built-in validation and metadata.
+### 🛠️ System Integration
+- **In-App Updates** — Android Play Store update checks via `in_app_update`
+- **Persistent Settings** — All preferences stored via `SharedPreferences`
+- **History Log** — Auto-saved calculation history
+- **Version Tracking** — Build info via `package_info_plus`
 
-### In-App Update
+---
 
-- `UpdateService` uses `in_app_update` for Android update checks.
-- `MainEntryScreen` triggers an update check on startup and shows a custom update dialog if an update is available.
+## 🏗️ ARCHITECTURE
 
-## Dependencies
+```mermaid
+graph TB
+    subgraph PRESENTATION["PRESENTATION LAYER"]
+        SP[SplashScreen]
+        ME[MainEntryScreen]
+        CH[CalculatorHome]
+        SC[SettingsScreen]
+        UC[UnitConverterScreen]
+        PH[PhysicsScreen]
+        CHM[ChemistryScreen]
+        MH[MathematicsScreen]
+        HS[HistoryScreen]
+        AB[AboutScreen]
+        PP[PrivacyPolicyScreen]
+    end
 
-- `flutter`
-- `cupertino_icons`
-- `google_fonts`
-- `provider`
-- `math_expressions`
-- `shared_preferences`
-- `package_info_plus`
-- `speech_to_text`
-- `permission_handler`
-- `in_app_update`
-- `flutter_markdown`
+    subgraph STATE["STATE MANAGEMENT"]
+        CP[CalculatorProvider]
+        TP[ThemeProvider]
+        CNP[ConverterProvider]
+        SPV[ScienceProvider]
+    end
 
-## Build & Run
+    subgraph CORE["CORE LAYER"]
+        TH[CosmicTheme]
+        MA[main.dart]
+    end
+
+    subgraph DATA["DATA LAYER"]
+        FM[formulas.dart]
+        SH[SharedPreferences]
+    end
+
+    subgraph SERVICES["SERVICES"]
+        US[UpdateService]
+        STT[Speech To Text]
+        PKG[Package Info]
+    end
+
+    subgraph WIDGETS["REUSABLE WIDGETS"]
+        DS[DisplaySection]
+        KS[KeypadSection]
+        MSW[ModeScreenWrapper]
+        UD[UpdateDialog]
+    end
+
+    PRESENTATION --> STATE
+    STATE --> CORE
+    STATE --> DATA
+    STATE --> SERVICES
+    PRESENTATION --> WIDGETS
+    CH --> STT
+    ME --> US
+    SP --> MA
+    MA --> TH
+
+    linkStyle default stroke:#6C5CE7,stroke-width:2px
+    classDef layer fill:#1a1a2e,stroke:#6C5CE7,stroke-width:2px,color:#fff
+    classDef component fill:#16213e,stroke:#0f3460,stroke-width:1px,color:#e0e0e0
+    class PRESENTATION,STATE,CORE,DATA,SERVICES,WIDGETS layer
+    class SP,ME,CH,SC,UC,PH,CHM,MH,HS,AB,PP,CP,TP,CNP,SPV,TH,MA,FM,SH,US,STT,PKG,DS,KS,MSW,UD component
+```
+
+### Data Flow
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI as Widgets
+    participant Provider as State Provider
+    participant Data as Data Layer
+    participant Service as Services
+
+    User->>UI: Input Expression
+    UI->>Provider: Evaluate()
+    Provider->>Data: Parse & Compute
+    Data-->>Provider: Result
+    Provider-->>UI: Update State
+    UI-->>User: Display Result
+
+    User->>UI: Speak Command
+    UI->>Service: Speech Recognition
+    Service-->>UI: Transcribed Text
+    UI->>Provider: Parse Expression
+    Provider->>Data: Evaluate
+    Data-->>Provider: Result
+    Provider-->>UI: Update State
+    UI-->>User: Display Result
+```
+
+---
+
+## 📂 DIRECTORY NEXUS
+
+```
+┌── lib/
+│   ├── main.dart                    # App ignition, orientation lock, provider registry
+│   ├── core/
+│   │   └── theme.dart               # CosmicTheme — 3 palettes, adaptive theming engine
+│   ├── data/
+│   │   └── formulas.dart            # Formula models, metadata, safe evaluation
+│   ├── providers/
+│   │   ├── calculator_provider.dart  # Expression building, history, evaluation
+│   │   ├── theme_provider.dart       # Palette, mode, precision, haptics state
+│   │   ├── converter_provider.dart   # Unit conversion state machine
+│   │   └── science_provider.dart     # Formula category & selection state
+│   ├── screens/
+│   │   ├── splash_screen.dart        # Quantum boot sequence
+│   │   ├── main_entry_screen.dart    # Hub portal with update checks
+│   │   ├── calculator_home.dart      # Primary calculator with voice integration
+│   │   ├── settings_screen.dart      # Preference matrix
+│   │   ├── unit_converter_screen.dart# Cross-unit translation
+│   │   ├── physics_screen.dart       # Physics formula interface
+│   │   ├── chemistry_screen.dart     # Chemistry formula interface
+│   │   ├── mathematics_screen.dart   # Math formula interface
+│   │   ├── history_screen.dart       # Calculation archive
+│   │   ├── about_screen.dart         # App intel
+│   │   └── privacy_policy_screen.dart# Legal nexus
+│   ├── services/
+│   │   └── update_service.dart       # Android in-app update orchestrator
+│   └── widgets/
+│       ├── display_section.dart      # Expression & result display
+│       ├── keypad_section.dart       # Dynamic keypad grid
+│       ├── calculator_button.dart    # Haptic-enabled button primitive
+│       ├── mode_screen_wrapper.dart   # Shared screen chrome
+│       ├── formula_info_card.dart    # Formula detail card
+│       └── update_dialog.dart        # Update notification modal
+├── assets/
+│   └── images/
+│       └── app_icon.png              # Application icon
+├── test/                             # Test suite
+├── android/                          # Android platform layer
+├── ios/                              # iOS platform layer
+├── web/                              # Web platform layer
+├── windows/                          # Windows platform layer
+├── macos/                            # macOS platform layer
+├── linux/                            # Linux platform layer
+└── pubspec.yaml                      # Dependency manifest
+```
+
+---
+
+## 🧪 TECHNOLOGY STACK
+
+| Layer          | Technology                              |
+|---------------|-----------------------------------------|
+| Framework     | Flutter 3.11+ / Dart 3.11+              |
+| State         | Provider (ChangeNotifier)                |
+| Parsing       | `math_expressions`                       |
+| Persistence   | `shared_preferences`                     |
+| Voice         | `speech_to_text` + `permission_handler` |
+| Updates       | `in_app_update`                          |
+| Typography    | Google Fonts (Space Grotesk + Inter)    |
+| Packaging     | `package_info_plus`                      |
+| Markdown      | `flutter_markdown`                       |
+| Icons         | `cupertino_icons`                        |
+
+---
+
+## 🚀 DEPLOYMENT
 
 ```bash
+# Initialize
 flutter pub get
+
+# Development
 flutter run
+
+# Production builds
+flutter build apk          # Android
+flutter build ios          # iOS
+flutter build web          # Web
+flutter build windows      # Windows
+flutter build macos        # macOS
+flutter build linux        # Linux
 ```
 
-For release builds:
+---
 
-```bash
-flutter build apk
-flutter build ios
-flutter build web
+## ⚙️ CONFIGURATION MATRIX
+
+| Setting             | Type      | Persistence | Scope      |
+|--------------------|-----------|-------------|------------|
+| Palette Preset     | Enum      | SharedPrefs | Global     |
+| Interface Mode     | Enum      | SharedPrefs | Global     |
+| Decimal Precision  | Integer   | SharedPrefs | Global     |
+| Trig Angle Base    | Enum      | SharedPrefs | Global     |
+| Notation           | Enum      | SharedPrefs | Global     |
+| Haptic Feedback    | Boolean   | SharedPrefs | Global     |
+| Click Sounds       | Boolean   | SharedPrefs | Global     |
+| History Auto-Save  | Boolean   | SharedPrefs | Global     |
+
+---
+
+## 🔮 ROADMAP
+
+```
+[████████░░] Core Calculator       — Complete
+[████████░░] Voice Input           — Complete
+[████████░░] Unit Converter        — Complete
+[████████░░] Science Formulas      — Complete
+[████████░░] Theme System          — Complete
+[█████░░░░░] Graphing Calculator   — Planned
+[█████░░░░░] Custom Formulas       — Planned
+[███░░░░░░░] Cloud Sync            — Planned
+[██░░░░░░░░] Widget/Complication   — Planned
+[█░░░░░░░░░] AI Assistant          — Research
 ```
 
-## Notes for Production Access
+---
 
-- App package name and version are defined in `pubspec.yaml` as `name: inficalc` and `version: 1.1.2+5`.
-- Android-only update support is implemented using `in_app_update`.
-- Voice input requires microphone permission at runtime.
+## 📦 DEPENDENCIES
 
-## How to Answer Common Questions
+```
+cupertino_icons    ^1.0.8     iOS-style icons
+google_fonts       ^8.0.2     Space Grotesk & Inter typefaces
+provider           ^6.1.5     State management framework
+math_expressions   ^3.1.0     Expression parsing & evaluation
+shared_preferences ^2.5.5     Persistent local storage
+package_info_plus  ^9.0.1     Version & build metadata
+speech_to_text     ^7.0.0     Voice recognition engine
+permission_handler ^12.0.1    Runtime permission requests
+in_app_update      ^4.2.3     Android Play Store updates
+flutter_markdown   ^0.7.7     Markdown rendering
+```
 
-- "What architectures are used?" — Provider-based state management with separate UI, data, and service layers.
-- "How are user settings stored?" — Persistent storage using `SharedPreferences` in `ThemeProvider`.
-- "How is voice input handled?" — `speech_to_text` listens and converts spoken math phrases in `calculator_home.dart`.
-- "How does the app handle formula calculations?" — `ScienceProvider` uses `Formula` objects from `lib/data/formulas.dart` with safe evaluation and validation.
-- "What screens does the app have?" — Splash, calculator, math, physics, chemistry, unit converter, history, settings, privacy policy, and about.
+---
+
+## 📜 LICENSE
+
+Proprietary — All rights reserved. Unauthorized reproduction or distribution prohibited.
+
+---
+
+<div align="center">
+  <sub>⚡ Built with Flutter · Maintained by the InfiCalc Development Team</sub>
+  <br>
+  <sub>📱 Cross-Platform · 🎙️ Voice-Activated · 🧬 Science-Ready</sub>
+</div>
