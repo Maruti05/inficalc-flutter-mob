@@ -4,7 +4,6 @@
 
 ### *The Infinity Scientific Calculator*
 
-**超越极限 · 無限の計算 · 무한 계산**
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.11+-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11+-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
